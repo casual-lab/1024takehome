@@ -1,0 +1,8 @@
+agave
+geyser-test-program
+kafka-clickhouse-sync
+solana-accountsdb-plugin-kafka
+redpanda-quickstart
+rpk-linux-amd64.zip
+
+__pycache__/
