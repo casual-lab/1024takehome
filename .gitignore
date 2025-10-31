@@ -7,5 +7,6 @@ rpk-linux-amd64.zip
 bridge
 lp_module
 # zk-bridge
+target/
 
 __pycache__/
