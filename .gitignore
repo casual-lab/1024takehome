@@ -1,5 +1,5 @@
 agave
-geyser-test-program
+# geyser-test-program
 kafka-clickhouse-sync
 solana-accountsdb-plugin-kafka
 redpanda-quickstart

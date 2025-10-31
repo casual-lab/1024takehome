@@ -1,0 +1,12 @@
+[programs.localnet]
+geyser_test_program = "3hschqcggfCGdwA4iHzWa747To1DppsoX5BfKr4DgN6s"
+
+[registry]
+url = "https://api.apr.dev"
+
+[provider]
+cluster = "Localnet"
+wallet = "~/.config/solana/id.json"
+
+[scripts]
+test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
