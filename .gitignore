@@ -6,6 +6,6 @@ redpanda-quickstart
 rpk-linux-amd64.zip
 bridge
 lp_module
-zk-bridge
+# zk-bridge
 
 __pycache__/
