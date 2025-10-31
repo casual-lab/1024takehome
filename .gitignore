@@ -5,7 +5,7 @@ solana-accountsdb-plugin-kafka
 redpanda-quickstart
 rpk-linux-amd64.zip
 bridge
-lp_module
+# lp_module
 # zk-bridge
 target/
 

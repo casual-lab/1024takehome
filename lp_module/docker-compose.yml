@@ -1,0 +1,138 @@
+services:
+  # 主开发环境容器
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: lp-module-dev:latest
+    container_name: lp-dev
+    hostname: lp-dev
+    volumes:
+      # 挂载项目目录
+      - .:/workspace
+      # 挂载 Git 配置（只读）
+      - ~/.gitconfig:/root/.gitconfig:ro
+      # 挂载 SSH 密钥（只读）
+      - ~/.ssh:/root/.ssh:ro
+      # 持久化 Solana 配置
+      - solana_config:/root/.config/solana
+      # 持久化 Cargo 缓存
+      - cargo_cache:/root/.cargo/registry
+      - cargo_git:/root/.cargo/git
+      # 持久化 npm 缓存
+      - npm_cache:/root/.npm
+    ports:
+      # 前端开发服务器
+      - "13000:3000"
+      - "13001:3001"
+      # Solana 测试验证器
+      - "18899:8899"    # RPC
+      - "18900:8900"    # WebSocket
+      - "18001:8001"    # Faucet
+      - "19900:9900"    # PubSub
+    environment:
+      - TERM=xterm-256color
+      - NODE_ENV=development
+      # Solana 配置
+      - SOLANA_RPC_URL=http://localhost:8899
+      - ANCHOR_PROVIDER_URL=http://localhost:8899
+      - ANCHOR_WALLET=/root/.config/solana/id.json
+      # ClickHouse 连接
+      - CLICKHOUSE_HOST=clickhouse
+      - CLICKHOUSE_PORT=8123
+      - CLICKHOUSE_DB=lp_module
+      - CLICKHOUSE_USER=admin
+      - CLICKHOUSE_PASSWORD=password
+    stdin_open: true
+    tty: true
+    command: /bin/bash
+    networks:
+      - lp-network
+    depends_on:
+      - clickhouse
+    # 资源限制（可选）
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '4'
+    #       memory: 8G
+    #     reservations:
+    #       cpus: '2'
+    #       memory: 4G
+
+  # ClickHouse 数据库
+  clickhouse:
+    image: clickhouse/clickhouse-server:latest
+    container_name: lp-clickhouse
+    hostname: clickhouse
+    ports:
+      - "18123:8123"    # HTTP 接口（修改为 18123 避免冲突）
+      - "19000:9000"    # Native 接口（修改为 19000 避免冲突）
+    volumes:
+      # 持久化数据
+      - clickhouse_data:/var/lib/clickhouse
+      # 持久化日志
+      - clickhouse_logs:/var/log/clickhouse-server
+      # 自定义配置（如果需要）
+      # - ./clickhouse/config.xml:/etc/clickhouse-server/config.xml:ro
+      # - ./clickhouse/users.xml:/etc/clickhouse-server/users.xml:ro
+    environment:
+      # 数据库配置
+      CLICKHOUSE_DB: lp_module
+      CLICKHOUSE_USER: admin
+      CLICKHOUSE_PASSWORD: password
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
+    networks:
+      - lp-network
+    healthcheck:
+      test: ["CMD", "clickhouse-client", "--query", "SELECT 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    # 资源限制（可选）
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '2'
+    #       memory: 4G
+    #     reservations:
+    #       cpus: '1'
+    #       memory: 2G
+
+  # ClickHouse 客户端（用于管理和查询）
+  clickhouse-client:
+    image: clickhouse/clickhouse-client:latest
+    container_name: lp-clickhouse-client
+    networks:
+      - lp-network
+    depends_on:
+      - clickhouse
+    entrypoint: /bin/sh
+    command: -c "while true; do sleep 3600; done"
+    profiles:
+      - tools
+
+# 网络配置
+networks:
+  lp-network:
+    driver: bridge
+    name: lp-network
+
+# 持久化卷
+volumes:
+  # ClickHouse 数据卷
+  clickhouse_data:
+    name: lp_clickhouse_data
+  clickhouse_logs:
+    name: lp_clickhouse_logs
+  
+  # 开发环境缓存卷
+  solana_config:
+    name: lp_solana_config
+  cargo_cache:
+    name: lp_cargo_cache
+  cargo_git:
+    name: lp_cargo_git
+  npm_cache:
+    name: lp_npm_cache

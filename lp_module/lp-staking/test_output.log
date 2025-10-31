@@ -1,0 +1,86 @@
+warning: ambiguous glob re-exports
+ --> programs/lp-staking/src/instructions/mod.rs:5:9
+  |
+5 | pub use initialize::*;
+  |         ^^^^^^^^^^^^^ the name `handler` in the value namespace is first re-exported here
+6 | pub use deposit::*;
+7 | pub use withdraw::*;
+  |         ----------- but the name `handler` in the value namespace is also re-exported here
+  |
+  = note: `#[warn(ambiguous_glob_reexports)]` on by default
+
+warning: `lp-staking` (lib) generated 1 warning
+    Finished `release` profile [optimized] target(s) in 0.28s
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.11s
+     Running unittests src/lib.rs (/workspace/lp-staking/target/debug/deps/lp_staking-88d65970cfc59ac7)
+Deploying cluster: http://127.0.0.1:8899
+Upgrade authority: /root/.config/solana/id.json
+Deploying program "lp_staking"...
+Program path: /workspace/lp-staking/target/deploy/lp_staking.so...
+Program Id: AoQuXAg7gK5KHkeuhbLpJ5AtnziNb5M9FqjLNUaVudTx
+
+Signature: 3EwwnmPbkWpHsuVx1P4MyCpUqLMhYBKGfBY12gq8nfcj4VqT6tkJnX8DV7Lr3eoyvzzsFX4yDgatNAbtgGGWvSyN
+
+Deploy success
+
+Found a 'test' script in the Anchor.toml. Running it as a test suite!
+
+Running test suite: "/workspace/lp-staking/Anchor.toml"
+
+yarn run v1.22.22
+$ /workspace/lp-staking/node_modules/.bin/ts-mocha -p ./tsconfig.json -t 1000000 'tests/**/*.ts'
+(node:63985) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///workspace/lp-staking/tests/lp-staking.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /workspace/lp-staking/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+  lp-staking
+
+设置测试环境...
+✓ wrappedUSDC Mint: 5kKPyetiGN4fV5VFpYHj2Z5wxgqKuKuWGWvf3ZBQ2F3i
+✓ Pool State PDA: 9o1uwsufiCcELp7PjDWqJ1w6fKAGHtp9AJvuysYZbnRy
+✓ LP Token Mint: J1mRwML8t7iEuHZdezbz2dkSVUxnx2nQimNPfKDdMDc
+✓ Pool USDC Account: HH9u6ZphC2iAGjT4L6pA5JNQ41ZyLKSC7dVT4Yanf5TQ
+✓ 测试环境设置完成!
+
+=== 测试: 初始化流动性池 ===
+✓ 初始化交易: 2JaJpoiYctQHYfCw1ZngghQ3gpCCsSM3gYuwmSqr9cGXUEZLB9mUzVGRRC11CBJvtw9wKsWsv1Pyw63Bcis5E9ew
+✓ 池子初始化成功
+
+    ✔ 初始化流动性池 (405ms)
+=== 测试: 首次存入 10,000 USDC ===
+✓ 已铸造 100,000 USDC 给用户
+✓ 存入交易: 63rTTJgcQMdqX4JCDGW4DX5iE14gQP2YRwdC9Kg8gn2PR2Zrkton512X3HsJMLcHPiofjueru8pBbwJUq4Ys8kv
+✓ 用户获得 LP Token: 10
+✓ 首次存入成功（1:1 比例）
+
+    ✔ 首次存入 USDC（1:1 比例） (1626ms)
+=== 测试: 第二次存入 5,000 USDC ===
+✓ 存入交易: 37eshRErFLKUx57LMBd1iT6pt7hSgDFYCgEzCHPtTi8trQFh57rHi9TUQrwJknCGBvQyph3fcJ7kgiQ34vh9BByV
+✓ 第二次存入成功
+
+    ✔ 第二次存入 USDC（按比例计算） (405ms)
+=== 测试: 提取 3,000 LP Token ===
+    1) 提取部分 LP Token
+=== 测试: 存入低于最小金额（应失败）===
+✓ 正确拒绝了低于最小金额的存款
+
+    ✔ 边界测试: 尝试存入低于最小金额
+
+
+  4 passing (3s)
+  1 failing
+
+  1) lp-staking
+       提取部分 LP Token:
+     Error: AnchorError thrown in programs/lp-staking/src/instructions/withdraw.rs:16. Error Code: InsufficientLpTokens. Error Number: 6002. Error Message: Insufficient LP tokens.
+      at AnchorError.parse (node_modules/@coral-xyz/anchor/src/error.ts:152:14)
+      at translateError (node_modules/@coral-xyz/anchor/src/error.ts:277:35)
+      at MethodsBuilder.rpc [as _rpcFn] (node_modules/@coral-xyz/anchor/src/program/namespace/rpc.ts:35:29)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+
+
+error Command failed with exit code 1.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
