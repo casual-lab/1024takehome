@@ -1,5 +1,15 @@
 # 测试说明
 
+## clone:
+
+在项目根目录下克隆：
+
+- https://github.com/casual-lab/bridge
+- https://github.com/casual-lab/solana-accountsdb-plugin-kafka
+- https://github.com/casual-lab/kafka-clickhouse-sync
+- https://github.com/casual-lab/agave
+
+
 ## 1. 本地链部署
 
 工作目录：`./agave`

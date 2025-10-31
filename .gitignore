@@ -2,7 +2,7 @@ agave
 # geyser-test-program
 kafka-clickhouse-sync
 solana-accountsdb-plugin-kafka
-redpanda-quickstart
+redpanda-quickstart/docker-compose/test-ledger
 rpk-linux-amd64.zip
 bridge
 # lp_module
